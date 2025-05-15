@@ -63,7 +63,9 @@ function renderBoard() {
   
   // Display game-ending conditions
   if (isCheckmate(whiteTurn)) {
-    document.getElementById('turn').textContent = (whiteTurn ? "White" : "Black") + " is in Checkmate! Game Over.";
+    const winner = whiteTurn ? "Black" : "White";
+    document.getElementById('turn').textContent = `${whiteTurn ? "White" : "Black"} is in Checkmate! Game Over.`;
+    showCheckmatePopup(winner);
   } else if (isStalemate(whiteTurn)) {
     document.getElementById('turn').textContent = "Stalemate! Game Over.";
   } else if (isKingInCheck(whiteTurn)) {
@@ -311,10 +313,46 @@ function isStalemate(isWhite) {
   return true;
 }
 
+// Show checkmate popup
+function showCheckmatePopup(winner) {
+  document.getElementById('winner-text').textContent = `Checkmate!`;
+  document.getElementById('winner-details').textContent = `${winner} wins the game!`;
+  document.getElementById('checkmate-popup').classList.add('active');
+  
+  // Play a victory sound if you have one
+  // document.getElementById('victorySound').play();
+}
+
+// Reset the game
+function resetGame() {
+  board = [
+    ['r','n','b','q','k','b','n','r'],
+    ['p','p','p','p','p','p','p','p'],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['P','P','P','P','P','P','P','P'],
+    ['R','N','B','Q','K','B','N','R']
+  ];
+  selected = null;
+  whiteTurn = true;
+  moveHistory = [];
+  lastMove = null;
+  document.getElementById('checkmate-popup').classList.remove('active');
+  renderBoard();
+  if (document.getElementById('moveHistory')) {
+    updateMoveHistory();
+  }
+}
+
 // Initialize game
 document.addEventListener('DOMContentLoaded', () => {
   createBoard();
   renderBoard();
+  
+  // Add event listener for the New Game button
+  document.getElementById('new-game-btn').addEventListener('click', resetGame);
 });
 
 document.getElementById('undoBtn').onclick = function() {
