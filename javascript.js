@@ -315,12 +315,19 @@ function isStalemate(isWhite) {
 
 // Show checkmate popup
 function showCheckmatePopup(winner) {
+  // Hide the existing text at the top (optional)
+  document.getElementById('turn').style.visibility = 'hidden';
+  
+  // Set popup content
   document.getElementById('winner-text').textContent = `Checkmate!`;
   document.getElementById('winner-details').textContent = `${winner} wins the game!`;
-  document.getElementById('checkmate-popup').classList.add('active');
   
-  // Play a victory sound if you have one
-  // document.getElementById('victorySound').play();
+  // Show popup with delay for dramatic effect
+  setTimeout(() => {
+    document.getElementById('checkmate-popup').classList.add('active');
+    // Play sound if you have one
+    // document.getElementById('victorySound').play();
+  }, 500);
 }
 
 // Reset the game
@@ -335,11 +342,20 @@ function resetGame() {
     ['P','P','P','P','P','P','P','P'],
     ['R','N','B','Q','K','B','N','R']
   ];
+  
+  // Reset all game variables
   selected = null;
   whiteTurn = true;
   moveHistory = [];
   lastMove = null;
+  
+  // Hide the popup
   document.getElementById('checkmate-popup').classList.remove('active');
+  
+  // Show the turn indicator again
+  document.getElementById('turn').style.visibility = 'visible';
+  
+  // Update the board
   renderBoard();
   if (document.getElementById('moveHistory')) {
     updateMoveHistory();
@@ -365,3 +381,4 @@ document.getElementById('undoBtn').onclick = function() {
     updateMoveHistory();
   }
 };
+
